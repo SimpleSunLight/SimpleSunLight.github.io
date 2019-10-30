@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="React组件通信问题">
+
+
+
+
+  <meta name="keywords" content="技术、程序员、前端开发、生活、分享">
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ALEX">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.10.1">
+
+
+
+<link rel="canonical" href="http://www.cancan.net.cn/2019/01/02/ag/">
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css">
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/nprogress/nprogress.min.css">
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.10.1">
+
+
+
+  
+  <script id="baidu_analytics">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?UA-131713064-1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.1.1/av-min.js"></script>
+  <script id="leancloud">
+    AV.init({
+      appId: "mc9K0bNk3IGBqviq7b7VbmsM-gzGzoHsz",
+      appKey: "7ycTfk75EHunsjkHO5rmjGEY"
+    });
+  </script>
+
+
+
+
+
+<script>
+  window.config = {"leancloud":{"app_id":"mc9K0bNk3IGBqviq7b7VbmsM-gzGzoHsz","app_key":"7ycTfk75EHunsjkHO5rmjGEY"},"toc":true,"fancybox":true,"pjax":true};
+</script>
+
+    <title> React组件通信问题 - ALEX </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">ALEX</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            标签
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            分类
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            关于
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <header id="header" class="header">
+      <div class="header-inner"><div class="logo-wrapper">
+  <a href="/." class="logo">ALEX's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+              <i class="fa fa-fw fa-home" style="margin-right: 5px;"></i>
+              
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+              <i class="fa fa-fw fa-archive" style="margin-right: 5px;"></i>
+              
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+              <i class="fa fa-fw fa-tags" style="margin-right: 5px;"></i> 
+              
+            
+            
+              标签
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+              <i class="fa fa-fw fa-th" style="margin-right: 5px;"></i> 
+              
+            
+            
+              分类
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+              <i class="fa fa-fw fa-user" style="margin-right: 5px;"></i> 
+              
+            
+            
+              关于
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </div>
+    </header>
+    <div class="container" id="mobile-panel">
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          React组件通信问题
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          <span class="post-meta-item-icon">
+            <i class="fa fa-calendar-o"></i>
+          <span>
+          <span class="post-meta-item-text">发表于</span>
+          2019-01-02
+        </span>
+        
+          <span class="post-category">
+            
+              <a href="/categories/React/">React</a>
+            
+          </span>
+        
+        
+        <span class="post-visits" data-url="/2019/01/02/ag/" data-title="React组件通信问题">
+          阅读次数 0
+        </span>
+        
+      </span></span></div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-父组件传递值给子组件"><span class="toc-text">1.父组件传递值给子组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-子组件传值给父组件"><span class="toc-text">2.子组件传值给父组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-有任何嵌套关系的组件之间传值"><span class="toc-text">3.有任何嵌套关系的组件之间传值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Event-Emitter-Target-Dispatcher"><span class="toc-text">(1) Event Emitter/Target/Dispatcher</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Publish-Subscribe"><span class="toc-text">(2) Publish / Subscribe</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Signals"><span class="toc-text">(3) Signals</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-简单实现了一下-subscribe-和-dispatch"><span class="toc-text">4.简单实现了一下 subscribe 和 dispatch</span></a></li></ol>
+    </div>
+  </div>
+
+
+
+    <div class="post-content">
+      
+        <p>在使用 React 的过程中，不可避免的需要组件间进行消息传递（通信），组件间通信大体有下面几种情况：<br>父组件向子组件通信,子组件向父组件通信,跨级组件之间通信,非嵌套组件间通信,下面依次说下这几种通信方式。<a id="more"></a></p>
+<h3 id="1-父组件传递值给子组件"><a href="#1-父组件传递值给子组件" class="headerlink" title="1.父组件传递值给子组件"></a>1.父组件传递值给子组件</h3><p>想必这种大家都是知道的吧！都想到了用我们react中的props,那么我在这简单的写了小demo,请看</p>
+<p>父组件<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Child text=<span class="string">"Hello"</span> /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>子组件<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">  render()&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;p&gt;&#123; <span class="keyword">this</span>.props.text &#125;&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="2-子组件传值给父组件"><a href="#2-子组件传值给父组件" class="headerlink" title="2.子组件传值给父组件"></a>2.子组件传值给父组件</h3><p>相必大家在这里估计得想一想吧！那么由我同样写个小demo来告诉大家,理解了其实也不难哦<br>父组件</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props); </span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      someKey: <span class="string">'world'</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  fn(newState) &#123;</span><br><span class="line">    <span class="keyword">this</span>.setState(&#123; <span class="attr">someKey</span>: newState &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;Child pfn=&#123;<span class="keyword">this</span>.fn.bind(<span class="keyword">this</span>)&#125; /&gt;</span><br><span class="line">        &lt;p&gt;&#123;<span class="keyword">this</span>.state.someKey&#125;&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>子组件</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props); </span><br><span class="line">    <span class="keyword">this</span>.state = &#123;</span><br><span class="line">      newState: <span class="string">'Hello'</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  someFn() &#123;</span><br><span class="line">    <span class="keyword">this</span>.props.pfn(<span class="keyword">this</span>.state.newState);<span class="comment">//这里就是传值给父组件</span></span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div onClick=&#123; <span class="keyword">this</span>.someFn.bind(<span class="keyword">this</span>) &#125;&gt;点我&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>通过回调函数进行向父组件传值，并绑定父组件的this this.fn.bind(this)</p>
+<h3 id="3-有任何嵌套关系的组件之间传值"><a href="#3-有任何嵌套关系的组件之间传值" class="headerlink" title="3.有任何嵌套关系的组件之间传值"></a>3.有任何嵌套关系的组件之间传值</h3><p>如果组件之间没有任何关系，组件嵌套层次比较深（个人认为 2 层以上已经算深了），或者你为了一些组件能够订阅、写入一些信号，不想让组件之间插入一个组件，让两个组件处于独立的关系。对于事件系统，这里有 2 个基本操作步骤：订阅（subscribe）/监听（listen）一个事件通知，并发送（send）/触发（trigger）/发布（publish）/发送（dispatch）一个事件通知那些想要的组件。</p>
+<p>下面讲介绍 3 种模式来处理事件，你能 点击这里 来比较一下它们。</p>
+<p>简单总结一下：</p>
+<h4 id="1-Event-Emitter-Target-Dispatcher"><a href="#1-Event-Emitter-Target-Dispatcher" class="headerlink" title="(1) Event Emitter/Target/Dispatcher"></a>(1) Event Emitter/Target/Dispatcher</h4><p>特点：需要一个指定的订阅源<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// to subscribe</span></span><br><span class="line">otherObject.addEventListener(‘click’, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; alert(‘click!’); &#125;);</span><br><span class="line"><span class="comment">// to dispatch</span></span><br><span class="line"><span class="keyword">this</span>.dispatchEvent(‘click’);</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-Publish-Subscribe"><a href="#2-Publish-Subscribe" class="headerlink" title="(2) Publish / Subscribe"></a>(2) Publish / Subscribe</h4><p>特点：触发事件的时候，你不需要指定一个特定的源，因为它是使用一个全局对象来处理事件（其实就是一个全局广播的方式来处理事件）<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// to subscribe</span></span><br><span class="line">globalBroadcaster.subscribe(‘click’, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; alert(‘click!’); &#125;);</span><br><span class="line"><span class="comment">// to dispatch</span></span><br><span class="line">globalBroadcaster.publish(‘click’);</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-Signals"><a href="#3-Signals" class="headerlink" title="(3) Signals"></a>(3) Signals</h4><p>特点：与Event Emitter/Target/Dispatcher相似，但是你不要使用随机的字符串作为事件触发的引用。触发事件的每一个对象都需要一个确切的名字（就是类似硬编码类的去写事件名字），并且在触发的时候，也必须要指定确切的事件。（看例子吧，很好理解）<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// to subscribe</span></span><br><span class="line">otherObject.clicked.add(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; alert(‘click’); &#125;);</span><br><span class="line"><span class="comment">// to dispatch</span></span><br><span class="line"><span class="keyword">this</span>.clicked.dispatch();</span><br></pre></td></tr></table></figure></p>
+<p>在处理事件的时候，需要注意：<br>在 componentDidMount 事件中，如果组件挂载（mounted）完成，再订阅事件；当组件卸载（unmounted）的时候，在 componentWillUnmount 事件中取消事件的订阅。</p>
+<p>看了上面所述,是否有所感悟<br>例如通过事件来进行非父子组件间的通信，如果操作不是很多，我们可以自己动手简单实现以下哦！<br>下面我简单的写了一个,请看</p>
+<h3 id="4-简单实现了一下-subscribe-和-dispatch"><a href="#4-简单实现了一下-subscribe-和-dispatch" class="headerlink" title="4.简单实现了一下 subscribe 和 dispatch"></a>4.简单实现了一下 subscribe 和 dispatch</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> EventEmitter = &#123;</span><br><span class="line">  _events: &#123;&#125;,</span><br><span class="line">  dispatch: <span class="function"><span class="keyword">function</span> (<span class="params">event, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>._events[event]) &#123; <span class="comment">// 没有监听事件</span></span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>._events[event].length; i++) &#123;</span><br><span class="line">      <span class="keyword">this</span>._events[event][i](data);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  subscribe: <span class="function"><span class="keyword">function</span> (<span class="params">event, callback</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 创建一个新事件数组</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>._events[event]) &#123;</span><br><span class="line">      <span class="keyword">this</span>._events[event] = [];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>._events[event].push(callback);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">otherObject.subscribe(<span class="string">'namechanged'</span>, (data) =&gt; <span class="built_in">console</span>.log(data.name));</span><br><span class="line"><span class="keyword">this</span>.dispatch(<span class="string">'namechanged'</span>, &#123; <span class="attr">name</span>: <span class="string">'John'</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>是不是现在觉得组件通信其实也没那么难懂吧,加油吧，骚年</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://www.cancan.net.cn">ALEX</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://www.cancan.net.cn/2019/01/02/ag/">http://www.cancan.net.cn/2019/01/02/ag/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+  <div class="post-reward">
+    <input type="checkbox" name="reward" id="reward" hidden>
+    <label class="reward-button" for="reward">赞赏支持</label>
+    <div class="qr-code">
+      
+      
+        <label class="qr-code-image" for="reward">
+          <img class="image" src="/image/reward/wechat.png" title="wechat">
+        </label>
+      
+      
+        <label class="qr-code-image" for="reward">
+          <img class="image" src="/image/reward/alipay.png" title="alipay">
+        </label>
+      
+    </div>
+  </div>
+
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/react/">react</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/01/04/ah/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JavaScript中的Call、Apply、Bind的实现</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/12/26/aj/">
+        <span class="next-text nav-default">JavaScript运行机制,Event Loop</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTM2OC8xNzkxNQ">
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+      </div>  
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+    
+      
+        
+          <a href="https://stackoverflow.com/users/8488426/sunlightsimple" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://github.com/SimpleSunLight" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+        
+          <a href="https://www.zhihu.com/people/chen-can-16-48/activities" class="iconfont icon-zhihu" title="zhihu"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+
+    
+  </div>
+
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2018 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">ALEX</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+   <script type="text/javascript">
+	(function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+  </script>
+
+
+
+
+    
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/pjax/jquery.pjax.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/nprogress/nprogress.min.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.10.1"></script>
+
+  </body>
+</html>
