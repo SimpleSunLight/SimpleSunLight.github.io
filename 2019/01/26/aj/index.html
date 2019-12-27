@@ -17,7 +17,7 @@
 
 
 
-  <meta name="description" content="Exports、Module.exports、Export、Export defalut">
+  <meta name="description" content="JavaScript运行机制,Event Loop">
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-<link rel="canonical" href="http://www.cancan.net.cn/2018/11/30/ab/">
+<link rel="canonical" href="http://www.cancan.net.cn/2019/01/26/aj/">
 
 
 
@@ -108,7 +108,7 @@
   window.config = {"leancloud":{"app_id":"mc9K0bNk3IGBqviq7b7VbmsM-gzGzoHsz","app_key":"7ycTfk75EHunsjkHO5rmjGEY"},"toc":true,"fancybox":true,"pjax":true};
 </script>
 
-    <title> Exports、Module.exports、Export、Export defalut - ALEX </title>
+    <title> JavaScript运行机制,Event Loop - ALEX </title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -258,7 +258,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Exports、Module.exports、Export、Export defalut
+          JavaScript运行机制,Event Loop
         
       </h1>
 
@@ -268,7 +268,7 @@
             <i class="fa fa-calendar-o"></i>
           <span>
           <span class="post-meta-item-text">发表于</span>
-          2018-11-30
+          2019-01-26
         </span>
         
           <span class="post-category">
@@ -278,7 +278,7 @@
           </span>
         
         
-        <span class="post-visits" data-url="/2018/11/30/ab/" data-title="Exports、Module.exports、Export、Export defalut">
+        <span class="post-visits" data-url="/2019/01/26/aj/" data-title="JavaScript运行机制,Event Loop">
           阅读次数 0
         </span>
         
@@ -290,7 +290,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-exports、module-exports"><span class="toc-text">1.exports、module.exports</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-export、export-default"><span class="toc-text">2.export、export default</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-为什么JavaScript是单线程？"><span class="toc-text">1.为什么JavaScript是单线程？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-任务队列"><span class="toc-text">2.任务队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Node-js的Event-Loop"><span class="toc-text">3.Node.js的Event Loop</span></a></li></ol>
     </div>
   </div>
 
@@ -298,18 +298,28 @@
 
     <div class="post-content">
       
-        <p>首先exports和module.exports是出自于CommonJs规范里面的,熟悉NodeJs的朋友或许知道，废话不多    说！根据这个规范，每个文件就是一个模块，有自己的作用域。在一个文件里面定义的变量、函数、类，都是私有的，对 其 他文件不可见。<a id="more"></a>CommonJS规范规定，每个模块内部，module变量代表当前模块。这个变量是一个对象，它的 exports属 性（即 module.exports）是对外的接口。加载某个模块，其实是加载该模块的module.exports属 性,module.exports导出对应require导入，export导出对应import导入。</p>
-<h3 id="1-exports、module-exports"><a href="#1-exports、module-exports" class="headerlink" title="1.exports、module.exports"></a>1.exports、module.exports</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">var</span> addX = <span class="function">(<span class="params">value</span>) =&gt;</span> value + x</span><br><span class="line"><span class="built_in">module</span>.exports.x = x;</span><br><span class="line"><span class="built_in">module</span>.exports.addX = addX;</span><br></pre></td></tr></table></figure>
-<p>上面代码通过module.exports输出变量x和函数addX。</p>
-<p>require方法用于加载模块。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> example = <span class="built_in">require</span>(<span class="string">'./example.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(example.x);         <span class="comment">// 5</span></span><br><span class="line"><span class="built_in">console</span>.log(example.addX(<span class="number">1</span>));   <span class="comment">// 6</span></span><br></pre></td></tr></table></figure></p>
-<p>看了刚刚这段commonjs规范上面的介绍可以知道以下区别与联系：<br>其实exports变量是指向module.exports，加载模块实际是加载该模块的module.exports。这等同在每个模块头<br>部，有一行这样的命令。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> exports = <span class="built_in">module</span>.exports;</span><br></pre></td></tr></table></figure></p>
-<p>于是我们可以直接在 exports 对象上添加方法，表示对外输出的接口，如同在module.exports上添加一样。注<br>意，不能直接将exports变量指向一个值，因为这样等于切断了exports与module.exports的联系。</p>
-<h3 id="2-export、export-default"><a href="#2-export、export-default" class="headerlink" title="2.export、export default"></a>2.export、export default</h3><p>export和export default是属于ES6语法<br>模块功能主要由：export和import构成。export导出模块的对外接口，import命令导入其他模块暴露的接口。<br>export其实和export default就是写法上面有点差别，一个是导出一个个单独接口，一个是默认导出一个整体接<br>口。使用import命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。这里就有一个简单写法不用<br>去知道有哪些具体的暴露接口名，就用export default命令，为模块指定默认输出。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">demo.js</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> a = <span class="string">"1"</span>;</span><br><span class="line"><span class="keyword">export</span> b = <span class="function">(<span class="params">a</span>)=&gt;</span> a + b;</span><br><span class="line"><span class="keyword">export</span> c = &#123;</span><br><span class="line">    d: <span class="string">'3'</span>,</span><br><span class="line">    e: <span class="string">'4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>export导出的变量或对象或方法，则对应的需要用import来导入<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; a, b, c &#125; <span class="keyword">from</span> <span class="string">'./demo.js'</span></span><br><span class="line"><span class="comment">//或者等价</span></span><br><span class="line"><span class="keyword">import</span> *<span class="keyword">as</span> newName <span class="keyword">from</span> <span class="string">'./demo.js'</span></span><br></pre></td></tr></table></figure></p>
-<p>针对export变量导出,es6 的规范 import * as obj from “xxx” 会将 “xxx” 中所有 export 导出的内容组合成一个对象返回</p>
-<p> export defalut<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> demo1.js</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> defalut&#123;</span><br><span class="line">    a: <span class="string">'2'</span>,</span><br><span class="line">    add(b,c) &#123;</span><br><span class="line">        <span class="keyword">return</span> b + c</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>import 导入<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> whatever <span class="keyword">from</span> <span class="string">'./demo1.js'</span></span><br></pre></td></tr></table></figure></p>
-<p>但一个文件中只能使用一次export defalut</p>
+        <p>JavaScript语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。那么，为什么JavaScript不能有多个线程呢？这样能提高效率啊。<a id="more"></a></p>
+<h3 id="1-为什么JavaScript是单线程？"><a href="#1-为什么JavaScript是单线程？" class="headerlink" title="1.为什么JavaScript是单线程？"></a>1.为什么JavaScript是单线程？</h3><p>JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？</p>
+<p>所以，为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。</p>
+<p>为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。</p>
+<h3 id="2-任务队列"><a href="#2-任务队列" class="headerlink" title="2.任务队列"></a>2.任务队列</h3><p>任务可以分为两种，一种为同步，另一种为异步（具有回调函数）。如下图：<br><img src="/2019/01/26/aj/images/task.png" alt="aj"><br>所有的同步任务都在主线程上执行，形成一个执行栈 stack。当所有同步任务执行完毕后，它会去执行microtask queue中的异步任务（nextTick，Promise），将他们全部执行。主线程之外还有一个任务队列task queue，当有异步任务（DOM，AJAX，setTimeout，setImmediate）有结果的时候，就在任务队列里放一个事件，一旦执行栈和microtask queue任务执行完毕，系统就会读取任务队列，将取出排在最前面的事件加入执行栈执行，这种机制就是任务队列。</p>
+<p><strong> Event Loop </strong></p>
+<p>主线程在任务队列中读取事件，这个过程是循环不断地，所以这种运行机制叫做Event Loop（事件循环）</p>
+<p><strong> nextTick、setImmediate、setTimeout </strong></p>
+<p>nextTick是在执行栈同步代码结束之后，下一次Event Loop（任务队列）执行之前。当所有同步任务执行完，会在queue中执行nextTick，无论nextTick有多少层回调，都会执行完毕后再去任务队列，所以会造成一直停留在当前执行栈，无法执行任务队列</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">process.nextTick(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'nextTick1'</span>);</span><br><span class="line">    process.nextTick(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'nextTick2'</span>)&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">	  </span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timeout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>执行完毕后输出nextTick1、nextTick2、setTimeout</p>
+<p>setImmediate方法是在Event Loop（任务队列）末尾，也就是下一次Event Loop时执行。<br>setTimeout方法是按照执行时间，放入任务队列，有时快与setImmediate有时慢</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">setImmediate(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setImmediate1'</span>);</span><br><span class="line">    setImmediate(<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'setImmediate2'</span>)&#125;);</span><br><span class="line">&#125;);</span><br><span class="line">  </span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timeout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'setTimeout'</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>这段代码执行完可能是setImmediate1、setTimeout、setImmediate2，也可能是setTimeout、setImmediate1、setImmediate2，原因是setTimeout和setImmediate1都是在下次Event Loop中触发，所以先后不确定，但是setImmediate2肯定是最后，因为他是在setImmediate1任务队列之后，也就是下下次Event Loop执行</p>
+<h3 id="3-Node-js的Event-Loop"><a href="#3-Node-js的Event-Loop" class="headerlink" title="3.Node.js的Event Loop"></a>3.Node.js的Event Loop</h3><p>Node.js也是单线程的Event Loop但是和浏览器有些区别，如图所示，</p>
+<p>1.先通过Chrom V8引擎解析Javascript脚本</p>
+<p>2.解析完毕后调用Node API</p>
+<p>3.LIBUV库负责Node API的执行，将不同任务分配给不同的线程，形成一个Event Loop（任务队列）</p>
+<p>4.最后Chrom V8引擎将结果返回给用户</p>
+<p><img src="/2019/01/26/aj/images/node.png" alt="aj"></p>
+<p><strong> Node.js Event Loop原理 </strong></p>
+<p>Node.js的特点是事件驱动，非阻塞单线程。当应用程序需要I/O操作的时候，线程并不会阻塞，而是把I/O操作交给底层库（LIBUV）。此时node线程会去处理其他任务，当底层库处理完I/O操作后，会将主动权交还给Node线程，所以Event Loop的用处是调度线程，例如：当底层库处理I/O操作后调度Node线程处理后续工作，所以虽然node是单线程，但是底层库处理操作依然是多线程</p>
 
       
     </div>
@@ -325,7 +335,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="http://www.cancan.net.cn/2018/11/30/ab/">http://www.cancan.net.cn/2018/11/30/ab/</a>
+      <a href="http://www.cancan.net.cn/2019/01/26/aj/">http://www.cancan.net.cn/2019/01/26/aj/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span>
@@ -365,22 +375,24 @@
             
               <a href="/tags/javascript/">javascript</a>
             
-              <a href="/tags/amd/">amd</a>
-            
-              <a href="/tags/cmd/">cmd</a>
-            
           </div>
         
         
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/12/07/ac/">
+      <a class="prev" href="/2019/02/02/ak/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Vue子组件给父组件通信</span>
+        <span class="prev-text nav-default">理解React中的Redux</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
+    
+      <a class="next" href="/2019/01/19/ai/">
+        <span class="next-text nav-default">Vue父组件传递数据给子组件</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
     
   </nav>
 

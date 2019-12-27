@@ -17,7 +17,7 @@
 
 
 
-  <meta name="description" content="Exports、Module.exports、Export、Export defalut">
+  <meta name="description" content="Css中的大于号('>')你可知？">
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-<link rel="canonical" href="http://www.cancan.net.cn/2018/11/30/ab/">
+<link rel="canonical" href="http://www.cancan.net.cn/2018/12/21/ae/">
 
 
 
@@ -108,7 +108,7 @@
   window.config = {"leancloud":{"app_id":"mc9K0bNk3IGBqviq7b7VbmsM-gzGzoHsz","app_key":"7ycTfk75EHunsjkHO5rmjGEY"},"toc":true,"fancybox":true,"pjax":true};
 </script>
 
-    <title> Exports、Module.exports、Export、Export defalut - ALEX </title>
+    <title> Css中的大于号('>')你可知？ - ALEX </title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -258,7 +258,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Exports、Module.exports、Export、Export defalut
+          Css中的大于号('>')你可知？
         
       </h1>
 
@@ -268,17 +268,17 @@
             <i class="fa fa-calendar-o"></i>
           <span>
           <span class="post-meta-item-text">发表于</span>
-          2018-11-30
+          2018-12-21
         </span>
         
           <span class="post-category">
             
-              <a href="/categories/JavaScript/">JavaScript</a>
+              <a href="/categories/Css/">Css</a>
             
           </span>
         
         
-        <span class="post-visits" data-url="/2018/11/30/ab/" data-title="Exports、Module.exports、Export、Export defalut">
+        <span class="post-visits" data-url="/2018/12/21/ae/" data-title="Css中的大于号('>')你可知？">
           阅读次数 0
         </span>
         
@@ -287,29 +287,18 @@
 
     
     
-  <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">文章目录</h2>
-    <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-exports、module-exports"><span class="toc-text">1.exports、module.exports</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-export、export-default"><span class="toc-text">2.export、export default</span></a></li></ol>
-    </div>
-  </div>
-
 
 
     <div class="post-content">
       
-        <p>首先exports和module.exports是出自于CommonJs规范里面的,熟悉NodeJs的朋友或许知道，废话不多    说！根据这个规范，每个文件就是一个模块，有自己的作用域。在一个文件里面定义的变量、函数、类，都是私有的，对 其 他文件不可见。<a id="more"></a>CommonJS规范规定，每个模块内部，module变量代表当前模块。这个变量是一个对象，它的 exports属 性（即 module.exports）是对外的接口。加载某个模块，其实是加载该模块的module.exports属 性,module.exports导出对应require导入，export导出对应import导入。</p>
-<h3 id="1-exports、module-exports"><a href="#1-exports、module-exports" class="headerlink" title="1.exports、module.exports"></a>1.exports、module.exports</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">var</span> addX = <span class="function">(<span class="params">value</span>) =&gt;</span> value + x</span><br><span class="line"><span class="built_in">module</span>.exports.x = x;</span><br><span class="line"><span class="built_in">module</span>.exports.addX = addX;</span><br></pre></td></tr></table></figure>
-<p>上面代码通过module.exports输出变量x和函数addX。</p>
-<p>require方法用于加载模块。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> example = <span class="built_in">require</span>(<span class="string">'./example.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(example.x);         <span class="comment">// 5</span></span><br><span class="line"><span class="built_in">console</span>.log(example.addX(<span class="number">1</span>));   <span class="comment">// 6</span></span><br></pre></td></tr></table></figure></p>
-<p>看了刚刚这段commonjs规范上面的介绍可以知道以下区别与联系：<br>其实exports变量是指向module.exports，加载模块实际是加载该模块的module.exports。这等同在每个模块头<br>部，有一行这样的命令。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> exports = <span class="built_in">module</span>.exports;</span><br></pre></td></tr></table></figure></p>
-<p>于是我们可以直接在 exports 对象上添加方法，表示对外输出的接口，如同在module.exports上添加一样。注<br>意，不能直接将exports变量指向一个值，因为这样等于切断了exports与module.exports的联系。</p>
-<h3 id="2-export、export-default"><a href="#2-export、export-default" class="headerlink" title="2.export、export default"></a>2.export、export default</h3><p>export和export default是属于ES6语法<br>模块功能主要由：export和import构成。export导出模块的对外接口，import命令导入其他模块暴露的接口。<br>export其实和export default就是写法上面有点差别，一个是导出一个个单独接口，一个是默认导出一个整体接<br>口。使用import命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。这里就有一个简单写法不用<br>去知道有哪些具体的暴露接口名，就用export default命令，为模块指定默认输出。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">demo.js</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> a = <span class="string">"1"</span>;</span><br><span class="line"><span class="keyword">export</span> b = <span class="function">(<span class="params">a</span>)=&gt;</span> a + b;</span><br><span class="line"><span class="keyword">export</span> c = &#123;</span><br><span class="line">    d: <span class="string">'3'</span>,</span><br><span class="line">    e: <span class="string">'4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>export导出的变量或对象或方法，则对应的需要用import来导入<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; a, b, c &#125; <span class="keyword">from</span> <span class="string">'./demo.js'</span></span><br><span class="line"><span class="comment">//或者等价</span></span><br><span class="line"><span class="keyword">import</span> *<span class="keyword">as</span> newName <span class="keyword">from</span> <span class="string">'./demo.js'</span></span><br></pre></td></tr></table></figure></p>
-<p>针对export变量导出,es6 的规范 import * as obj from “xxx” 会将 “xxx” 中所有 export 导出的内容组合成一个对象返回</p>
-<p> export defalut<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> demo1.js</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> defalut&#123;</span><br><span class="line">    a: <span class="string">'2'</span>,</span><br><span class="line">    add(b,c) &#123;</span><br><span class="line">        <span class="keyword">return</span> b + c</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>import 导入<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> whatever <span class="keyword">from</span> <span class="string">'./demo1.js'</span></span><br></pre></td></tr></table></figure></p>
-<p>但一个文件中只能使用一次export defalut</p>
+        <p>继承这个词,相信大家不会陌生,那么今天说点大于号(‘&gt;’)与<br>继承的关系,所以需更深的原理,来看一下吧！<a id="more"></a></p>
+<p>看一下这个代码<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>11111<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>22222<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>33333<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type="text/css"&gt;</span><br><span class="line">    <span class="selector-tag">div</span> &gt; <span class="selector-tag">span</span> &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">        <span class="attribute">background</span>: blue;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<p>此时会是什么样子,大家应该了解吧</p>
+<p>如果要是使第一个span不同于后面两个呢？怎样解决，这样吗？<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">span</span>&gt;</span>11111<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>22222<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>33333<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这样确实可以,所以大于号(‘&gt;’)是在嵌套标签中，将样式只作用于儿子辈的标签，而不作用于孙子辈的标签。</p>
+<p>但如果这样呢?<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>11111<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>22222<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>33333<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>此时大于号会起作用吗？答案:不会.因为这个孙子辈的span标签继承儿子辈的span标签样式。</p>
 
       
     </div>
@@ -325,7 +314,7 @@
     </p>
     <p class="copyright-item">
       <span>原文链接: </span>
-      <a href="http://www.cancan.net.cn/2018/11/30/ab/">http://www.cancan.net.cn/2018/11/30/ab/</a>
+      <a href="http://www.cancan.net.cn/2018/12/21/ae/">http://www.cancan.net.cn/2018/12/21/ae/</a>
     </p>
     <p class="copyright-item">
       <span>许可协议: </span>
@@ -365,9 +354,9 @@
             
               <a href="/tags/javascript/">javascript</a>
             
-              <a href="/tags/amd/">amd</a>
+              <a href="/tags/html/">html</a>
             
-              <a href="/tags/cmd/">cmd</a>
+              <a href="/tags/css/">css</a>
             
           </div>
         
@@ -375,12 +364,18 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/12/07/ac/">
+      <a class="prev" href="/2018/12/28/af/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Vue子组件给父组件通信</span>
+        <span class="prev-text nav-default">JavaScript深浅拷贝</span>
         <span class="prev-text nav-mobile">上一篇</span>
       </a>
     
+    
+      <a class="next" href="/2018/12/14/ad/">
+        <span class="next-text nav-default">Vue非父子组件之间的通信</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
     
   </nav>
 
